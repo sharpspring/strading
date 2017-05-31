@@ -1,5 +1,5 @@
 <?php
-class RequestPayPalOrderTest extends PHPUnit_Framework_TestCase {
+class RequestPayPalOrderTest extends PHPUnit\Framework\TestCase {
     private
         $credentials,
         $service;
@@ -19,7 +19,7 @@ class RequestPayPalOrderTest extends PHPUnit_Framework_TestCase {
 
         $placeholders = array_map(function ($name) { return '{' . $name . '}'; }, array_keys($this->credentials));
         $xml = str_replace($placeholders, $this->credentials, $xml);
-        
+
         $placeholders = array_map(function ($name) { return '{' . $name . '}'; }, array_keys($replace));
         $xml = str_replace($placeholders, $replace, $xml);
 
@@ -94,13 +94,13 @@ class RequestPayPalOrderTest extends PHPUnit_Framework_TestCase {
         $this->assertNull($transaction['authcode'], 'PayPal Order transaction must not resolve "authcode".');
         $this->assertNull($transaction['amount'], 'PayPal Order transaction must not resolve "amount.');
         $this->assertNotNull($transaction['paypal_token'], 'PayPal Order transaction must resolve "paypal_token".');
-        
-        $this->assertCount(8, $transaction, 'Transaction must consist of 8 entities.');
-        
+
+        $this->assertCount(9, $transaction, 'Transaction must consist of 9 entities.');
+
         $this->assertSame('PAYPAL', $transaction['transaction_type'], '"transaction_type" must be "PAYPAL"');
-        
-        $this->assertNull($response->getError(), 'Valid "paypal/order" must not produce an error.');
-        
+
+        $this->assertTrue($response->isOk(), 'Valid "paypal/order" must not produce an error.');
+
         $this->assertNotNull($response->getRedirectUrl(), '"paypal/order" must redirect user.');
     }
 }

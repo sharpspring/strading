@@ -1,5 +1,5 @@
 <?php
-class RequestCardAuthTest extends PHPUnit_Framework_TestCase {
+class RequestCardAuthTest extends PHPUnit\Framework\TestCase {
     private
         $credentials,
         $service,
@@ -20,7 +20,7 @@ class RequestCardAuthTest extends PHPUnit_Framework_TestCase {
 
         $placeholders = array_map(function ($name) { return '{' . $name . '}'; }, array_keys($this->credentials));
         $xml = str_replace($placeholders, $this->credentials, $xml);
-        
+
         $placeholders = array_map(function ($name) { return '{' . $name . '}'; }, array_keys($replace));
         $xml = str_replace($placeholders, $replace, $xml);
 
@@ -95,13 +95,13 @@ class RequestCardAuthTest extends PHPUnit_Framework_TestCase {
         $this->assertNotNull($transaction['authcode'], 'Card Auth transaction must resolve "authcode".');
         $this->assertNotNull($transaction['amount'], 'Card Auth transaction must resolve "amount.');
         $this->assertNull($transaction['paypal_token'], 'Card Auth transaction must not resolve "paypal_token".');
-        
-        $this->assertCount(8, $transaction, 'Transaction must consist of 8 entities.');
-        
+
+        $this->assertCount(9, $transaction, 'Transaction must consist of 9 entities.');
+
         $this->assertSame('VISA', $transaction['transaction_type'], '"transaction_type" must be "VISA"');
 
         // Valid "card/auth" must not produce an error.
-        $this->assertNull($response->getError());
+        $this->assertTrue($response->isOk());
 
         // "card/auth" must not redirect user.
         $this->assertNull($response->getRedirectUrl());
@@ -152,5 +152,75 @@ class RequestCardAuthTest extends PHPUnit_Framework_TestCase {
 
         // "card/auth" must not redirect user.
         $this->assertNull($response->getRedirectUrl());
+    }
+
+    public function testCardAuthParentTransaction()
+    {
+        $factory = new \RandomLib\Factory;
+        $generator = $factory->getGenerator(new \SecurityLib\Strength(\SecurityLib\Strength::MEDIUM));
+
+        $order_reference = $generator->generateString(32, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+        $auth = $this->service->request('card/auth');
+        echo $auth->getXML();
+        $transactionDetails = [
+            'alias' => $this->credentials['username'],
+            'request' => [
+                'merchant' => [
+                    'orderreference' => $order_reference,
+                ],
+                'billing' => [
+                    'amount' => 100,
+                    'amount[currencycode]' => 'GBP',
+                    'email' => 'foo@bar.baz',
+                    'name' => [
+                        'first' => 'Foo',
+                        'last' => 'Bar'
+                    ],
+                    'payment' => [
+                        'pan' => '4111110000000211',
+                        'securitycode' => '123',
+                        'expirydate' => '10/2031'
+                    ],
+                    'payment[type]' => 'VISA',
+                ],
+                'operation' => [
+                    'sitereference' => $this->credentials['site_reference']
+                ],
+            ],
+        ];
+        $auth->populate($transactionDetails, '/requestblock');
+
+        $response = $auth->request();
+        $this->assertTrue($response->isOk());
+
+        $transaction = $response->getTransaction();
+
+        $this->assertTrue(is_string($transaction['transaction_reference']));
+
+        $transactionDetails = [
+            'alias' => $this->credentials['username'],
+            'request' => [
+                'merchant' => [
+                    'orderreference' => $order_reference,
+                ],
+                'billing' => [
+                    'amount' => 200,
+                    'amount[currencycode]' => 'GBP',
+                ],
+                'operation' => [
+                    'sitereference' => $this->credentials['site_reference'],
+                    'parenttransactionreference' => $transaction['transaction_reference'],
+                ],
+            ],
+        ];
+
+        $auth = $this->service->request('card/auth');
+
+        $auth->populate($transactionDetails, '/requestblock');
+
+        $response = $auth->request();
+
+        $this->assertTrue($response->isOk());
     }
 }

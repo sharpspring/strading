@@ -1,5 +1,5 @@
 <?php
-class RequestTransactionQueryTest extends PHPUnit_Framework_TestCase {
+class RequestTransactionQueryTest extends PHPUnit\Framework\TestCase {
     private
         $credentials,
         $service;

@@ -4,6 +4,7 @@
   <response type="ORDER">
     <merchant>
       <orderreference>YRIYAFSTATLJKCCZAYYZWEPKURXNMIEO</orderreference>
+      <operatorname/>
     </merchant>
     <transactionreference>3-32-122176</transactionreference>
     <billing>
@@ -27,4 +28,5 @@
       <accounttypedescription>ECOM</accounttypedescription>
     </operation>
   </response>
+  <secrand/>
 </responseblock>
