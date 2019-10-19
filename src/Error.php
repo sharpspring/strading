@@ -12,18 +12,22 @@ class Error {
         $data;
     
     /**
-     * @param string $code
+     * @param int $code
      * @param string $message
      * @param string $data
      */
     public function __construct ($code, $message, $data) {
-        $this->code = $code;
+        $this->code = (int)$code;
         $this->message = $message;
         $this->data = $data;
     }
+
+    public function __toString() {
+        return __CLASS__ . ": [{$this->code}]: {$this->message} {$this->data}\n";
+    }
     
     /**
-     * @return string
+     * @return int
      */
     public function getCode () {
         return $this->code;

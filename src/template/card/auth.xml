@@ -52,6 +52,9 @@
             <sitereference/>
             <accounttypedescription>ECOM</accounttypedescription>
             <parenttransactionreference/>
+            <credentialsonfile/>
+            <md/>
+            <pares/>
         </operation>
         <settlement>
             <settlestatus/>

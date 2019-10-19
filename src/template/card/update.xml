@@ -16,6 +16,7 @@
                 <postcode/>
                 <payment>
                     <expirydate/>
+                    <active/>
                 </payment>
             </billing>
         </updates>
