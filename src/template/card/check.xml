@@ -51,6 +51,7 @@
             <sitereference/>
             <accounttypedescription>ECOM</accounttypedescription>
             <parenttransactionreference/>
+            <credentialsonfile/>
         </operation>
     </request>
 </requestblock>

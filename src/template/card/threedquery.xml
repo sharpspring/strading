@@ -1,8 +1,9 @@
 <requestblock version="3.67">
     <alias/>
-    <request type="STORE">
+    <request type="THREEDQUERY">
         <merchant>
             <email/>
+            <termurl/>
             <orderreference/>
         </merchant>
         <customer>
@@ -16,6 +17,8 @@
             <country/>
             <postcode/>
             <town/>
+            <accept/>
+            <useragent/>
             <name>
                 <middle/>
                 <prefix/>
@@ -48,9 +51,14 @@
             </payment>
         </billing>
         <operation>
+            <authmethod/>
             <sitereference/>
-            <accounttypedescription>CARDSTORE</accounttypedescription>
+            <accounttypedescription>ECOM</accounttypedescription>
             <parenttransactionreference/>
+            <credentialsonfile/>
         </operation>
+        <settlement>
+            <settlestatus/>
+        </settlement>
     </request>
 </requestblock>
