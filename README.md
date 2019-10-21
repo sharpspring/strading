@@ -229,6 +229,13 @@ If HTTP response is not `200`, then `Gajus\Strading\Exception\RuntimeException` 
 public function getTransaction ();
 
 /**
+ * Return the main response node
+ *
+ * @return SimpleXMLElement
+ */
+public function getResponseNode();
+
+/**
  * This information is available when response type is "ERROR".
  *
  * @return null|Gajus\Strading\Error

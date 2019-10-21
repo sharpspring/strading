@@ -27,7 +27,11 @@ class Response
         /**
          * @var string
          */
-        $redirect_url;
+        $redirect_url,
+        /**
+         * @var \SimpleXMLElement
+         */
+        $response_node;
 
     /**
      * @param SimpleXMLElement $xml Response body.
@@ -39,7 +43,7 @@ class Response
 
         // PHP 5.3 does not allow array access to the method response.
         $response = $this->xml->xpath('/responseblock/response');
-        $response = $response[0];
+        $this->response_node = $response = $response[0];
 
         $this->type = $response->attributes();
         $this->type = (string)$this->type['type'];
@@ -91,6 +95,16 @@ class Response
     public function getTransaction()
     {
         return $this->transaction;
+    }
+
+    /**
+     * Return the main response node
+     *
+     * @return SimpleXMLElement
+     */
+    public function getResponseNode()
+    {
+        return $this->response_node;
     }
 
     /**
